@@ -323,9 +323,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#entregable-2-modelo-analitico-analisis-de-calidad-de-datos-parametricos-historia-clinica" class="md-nav__link">
+  <a href="#entregable-2-modelo-analitico-de-calidad-de-datos-parametricos-historia-clinica" class="md-nav__link">
     <span class="md-ellipsis">
-      Entregable 2: Modelo Analítico Análisis de Calidad de Datos Paramétricos Historia Clínica
+      Entregable 2: Modelo Analítico de Calidad de Datos Paramétricos Historia Clínica
     </span>
   </a>
   
@@ -728,7 +728,7 @@
             
   
   <span class="md-ellipsis">
-    02. Modelo Analítico Análisis de Calidad de Datos Paramétricos Historia Clínica
+    02. Modelo Analítico de Calidad de Datos Paramétricos Historia Clínica
     
   </span>
   
@@ -739,7 +739,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            02. Modelo Analítico Análisis de Calidad de Datos Paramétricos Historia Clínica
+            02. Modelo Analítico de Calidad de Datos Paramétricos Historia Clínica
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -940,6 +940,28 @@
   
   
     <li class="md-nav__item">
+      <a href="02.Tablero/Visualizaciones/00.MR_Medidas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modelo Relacional y Medidas
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="02.Tablero/Visualizaciones/01.Vision_General/" class="md-nav__link">
         
   
@@ -1077,9 +1099,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#entregable-2-modelo-analitico-analisis-de-calidad-de-datos-parametricos-historia-clinica" class="md-nav__link">
+  <a href="#entregable-2-modelo-analitico-de-calidad-de-datos-parametricos-historia-clinica" class="md-nav__link">
     <span class="md-ellipsis">
-      Entregable 2: Modelo Analítico Análisis de Calidad de Datos Paramétricos Historia Clínica
+      Entregable 2: Modelo Analítico de Calidad de Datos Paramétricos Historia Clínica
     </span>
   </a>
   
@@ -1117,34 +1139,33 @@
 </p>
 
 <h3 id="contexto">Contexto<a class="headerlink" href="#contexto" title="Permanent link">&para;</a></h3>
-<p>Durante el desarrollo del proyecto <strong>Diseño Historia Clínica - Gobierno de Datos</strong>, el equipo de QCS colaboró estrechamente con la Clínica del Country en el diseño funcional y estructural de su <strong>Historia Clínica (HC)</strong>. Este trabajo incluyó, a nivel funcional, la integración de las aplicaciones involucradas y el desarrollo de funcionalidades que satisfacen las necesidades y requerimientos de la organización de manera eficiente, asegurando la alineación con los objetivos estratégicos de la Clínica.</p>
+<p>Durante el desarrollo del proyecto <strong>Diseño Historia Clínica - Gobierno de Datos</strong>, el equipo de QCS colaboró estrechamente con el equipo de la Clínica del Country en el diseño funcional y estructural de su <strong>Historia Clínica (HC)</strong>. Este trabajo incluyó, a nivel funcional, la integración de las aplicaciones involucradas y el desarrollo de funcionalidades que satisfacen las necesidades y requerimientos de la organización de manera eficiente, asegurando la alineación con los objetivos estratégicos de la Clínica.</p>
 <p>Para ello, el proyecto se estructuró en cuatro grupos de trabajo, cada uno enfocado en aspectos clave para garantizar una implementación exitosa.</p>
 <ul>
 <li><strong>GRUPO 1: EXPLORACIÓN JOURNEY PROCESOS</strong> <br>
     Analizar el ecosistema y entorno que rodea la Historia Clínica (HC), tanto en procesos como en aplicaciones y datos, con la información entregada por el área de tecnología de Country.</li>
 <li><strong>GRUPO 2: DISEÑO INTEGRAL DE LA SOLUCIÓN</strong> <br>
-    Utilizar Design Thinking para el planteamiento de la solución desde todas las perspectivas necesarias. </li>
+    Diseño de la solución para el planteamiento de la solución desde todas las perspectivas necesarias. </li>
 <li><strong>GRUPO 3: ASPECTOS FUNDAMENTALES</strong> <br>
     Definición Funcionalidades y Características necesarias en términos de rendimiento, fiabilidad, disponibilidad, acceso y diseño.</li>
 <li><strong>GRUPO 4: ESTRUCTURA DE DATOS</strong> <br>
     Modelo de datos centralizado con el análisis de la situación actual de la información y recomendaciones de gobierno de datos. </li>
 </ul>
 <p>De esta manera, el presente documento se enfocada en el componente técnico del <strong>GRUPO 4: ESTRUCTURA DE DATOS</strong></p>
-<p><img alt="" src="Alcance.JPG" /></p>
 <h3 id="objetivo">Objetivo:<a class="headerlink" href="#objetivo" title="Permanent link">&para;</a></h3>
 <p>El objetivo de este documento es presentar la documentación técnica de los entregables 1 y 2 del <strong>GRUPO 4: ESTRUCTURA DE DATOS</strong>. Esto es, el Repositorio centralizado de Datos Paramétricos HC y el Modelo Analítico Análisis de Calidad de Datos Paramétricos Historia Clínica.</p>
 <h3 id="entregable-1-repositorio-centralizado-de-datos-parametricos-hc">Entregable 1: Repositorio centralizado de Datos Paramétricos HC<a class="headerlink" href="#entregable-1-repositorio-centralizado-de-datos-parametricos-hc" title="Permanent link">&para;</a></h3>
 <p align="center">
     <img src="E1.JPG" alt="Entregable 1" width="437" height="257">
 </p>
-<p>Corresponde a un Repositorio Centralizado que <strong>almacena los datos paramétricos de la historia clínica</strong>, lo cual permite una gestión unificada y optimizada de la información. Para ello, se diseñaron e implementan procesos de Extracción, Transformación y Carga (ETL), lo cual sirve como insumo para realizar los análisis de calidad necesarios para mejorar el estado de los datos de a cara a la migración a una nueva herramienta.</p>
+<p>Corresponde a un Repositorio Centralizado que <strong>almacena los datos paramétricos de la historia clínica</strong>, lo cual permite una gestión unificada y optimizada de la información. Para ello, se diseñaron e implementaron procesos de Extracción, Transformación y Carga (ETL), lo cual sirve como insumo para realizar los análisis de calidad necesarios para mejorar el estado de los datos de a cara a la migración a una nueva herramienta.</p>
 <p>Estos procesos ETL cumplen varias funciones clave:</p>
 <ul>
 <li>
 <p><strong>Extracción</strong>: Captura los datos desde las bases <i>COL_CTY</i> y <i>CTY_PRI</i>, garantizando su disponibilidad en el repositorio centralizado.</p>
 </li>
 <li>
-<p><strong>Transformación</strong>: Calculo de metadatos desde <i>COL_CTY</i> y <i>CTY_PRI</i> e indicadores de los componentes de calidad evaluados.</p>
+<p><strong>Transformación</strong>: Cálculo de metadatos desde <i>COL_CTY</i> y <i>CTY_PRI</i> e indicadores de los componentes de calidad evaluados.</p>
 </li>
 <li>
 <p><strong>Carga</strong>: Incorpora la información optimizada en el repositorio centralizado, facilitando su acceso y análisis.</p>
@@ -1157,7 +1178,7 @@
 <li>Tabla maestra con lista de tablas a incluir, la cual se puede ajustar.</li>
 <li>Script SQL de creación de repositorio generado automáticamente.</li>
 </ul>
-<h3 id="entregable-2-modelo-analitico-analisis-de-calidad-de-datos-parametricos-historia-clinica">Entregable 2: Modelo Analítico Análisis de Calidad de Datos Paramétricos Historia Clínica<a class="headerlink" href="#entregable-2-modelo-analitico-analisis-de-calidad-de-datos-parametricos-historia-clinica" title="Permanent link">&para;</a></h3>
+<h3 id="entregable-2-modelo-analitico-de-calidad-de-datos-parametricos-historia-clinica">Entregable 2: Modelo Analítico de Calidad de Datos Paramétricos Historia Clínica<a class="headerlink" href="#entregable-2-modelo-analitico-de-calidad-de-datos-parametricos-historia-clinica" title="Permanent link">&para;</a></h3>
 <p align="center">
     <img src="E2.JPG" alt="Entregable 2" width="437" height="257">
 </p>
