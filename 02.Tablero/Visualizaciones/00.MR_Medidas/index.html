@@ -1068,7 +1068,73 @@
 <h1 id="modelo-relacional-y-medidas">Modelo Relacional y Medidas<a class="headerlink" href="#modelo-relacional-y-medidas" title="Permanent link">&para;</a></h1>
 <h2 id="modelo-relacional">Modelo Relacional<a class="headerlink" href="#modelo-relacional" title="Permanent link">&para;</a></h2>
 <p><img alt="MR" src="../MR.JPG" /></p>
-<p>El modelo relacional para el tablero cuenta con las siguientes tablas</p>
+<p>El modelo relacional para el tablero cuenta con las siguientes tablas:</p>
+<table>
+<thead>
+<tr>
+<th>Tabla</th>
+<th>Descripción</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dim_Base</td>
+<td>Información de las bases de datos analizadas</td>
+<td>Dim</td>
+</tr>
+<tr>
+<td>Dim_Esquema</td>
+<td>Información de los esquemas analizados</td>
+<td>Dim</td>
+</tr>
+<tr>
+<td>Dim_Campo</td>
+<td>Lista de campos de las bases de datos</td>
+<td>Dim</td>
+</tr>
+<tr>
+<td>Dim_Componente_Calidad</td>
+<td>Información de los componente de calidad</td>
+<td>Dim</td>
+</tr>
+<tr>
+<td>Dim_Tabla</td>
+<td>Lista de tablas de las bases de datos</td>
+<td>Dim</td>
+</tr>
+<tr>
+<td>Fact_Llaves_Foraneas</td>
+<td>Información de las llaves foráneas</td>
+<td>Fact</td>
+</tr>
+<tr>
+<td>Fact_Metadatos_Campos</td>
+<td>Información de los metadatos de los campos</td>
+<td>Fact</td>
+</tr>
+<tr>
+<td>Fact_Metadatos_Tablas</td>
+<td>Información de los metadatos de las tablas</td>
+<td>Fact</td>
+</tr>
+<tr>
+<td>Fact_Indicadores_Historicos</td>
+<td>Indicadores históricos de calidad a nivel de tabla</td>
+<td>Fact</td>
+</tr>
+<tr>
+<td>Medidas</td>
+<td>Medidas calculadas para el modelo analítico</td>
+<td>Medidas</td>
+</tr>
+<tr>
+<td>Indicadores_Historicos_Graficas</td>
+<td>Tabla calculada para el gráfico de indicadores <br> históricos</td>
+<td>Calculada</td>
+</tr>
+</tbody>
+</table>
 <h2 id="medidas">Medidas<a class="headerlink" href="#medidas" title="Permanent link">&para;</a></h2>
 <p>Cada medida calculada se describe brevemente, indicando su objetivo, la lógica DAX utilizada y (donde aplica) el formato de salida.</p>
 <ol>
@@ -1094,6 +1160,311 @@
     <div class="highlight"><pre><span></span><code># Llaves Foráneas = 
 <span class="w">    </span><span class="nb">var</span><span class="w"> </span>llaves = DISTINCTCOUNT(Fact_Llaves_Foraneas[Id_Llave_Foranea])
 <span class="w">    </span><span class="nb">return</span><span class="w"> </span><span class="nf">if</span><span class="p">(</span><span class="nf">ISBLANK</span><span class="p">(</span>llaves),0,llaves)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Entero</li>
+</ul>
+</li>
+<li><strong># Llaves Primarias</strong>  <ul>
+<li><strong>Objetivo:</strong> Cuantificar el número llaves primarias.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code># Llaves Primarias = 
+<span class="w">    </span><span class="nb">var</span><span class="w"> </span>llaves = DISTINCTCOUNT(Fact_Llaves_Foraneas[Id_Campo_Origen])
+<span class="w">    </span><span class="nb">return</span><span class="w"> </span><span class="nf">if</span><span class="p">(</span><span class="nf">ISBLANK</span><span class="p">(</span>llaves),0,llaves)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Entero</li>
+</ul>
+</li>
+<li><strong># Registros</strong>  <ul>
+<li><strong>Objetivo:</strong> Cuantificar el número de registros o filas de las bases de datos.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code># Registros = SUM(Fact_Metadatos_Tablas[TotalRegistros])
+</code></pre></div></li>
+<li><strong>Formato:</strong> Entero</li>
+</ul>
+</li>
+<li><strong># Registros Campos</strong>  <ul>
+<li><strong>Objetivo:</strong> Cuantificar el número de registros o filas para cada uno de los campos. Es decir, si una tabla tiene 10 registros y 4 campos este indicador da 40 registros.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code># Registros Campos = sum(Fact_Metadatos_Campos[TotalRegistros])
+</code></pre></div></li>
+<li><strong>Formato:</strong> Entero</li>
+</ul>
+</li>
+<li><strong># Tablas</strong>  <ul>
+<li><strong>Objetivo:</strong> Cuantificar el número de tablas.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code># Tablas = DISTINCTCOUNT(Fact_Metadatos_Tablas[Id_Tabla])
+</code></pre></div></li>
+<li><strong>Formato:</strong> Entero</li>
+</ul>
+</li>
+<li><strong>% Registros</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el porcentaje de los registros respecto al total analizado.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>% Registros = 
+<span class="w">    </span><span class="nf">DIVIDE</span><span class="p">(</span>
+<span class="w">      </span><span class="p">[</span># Registros],
+<span class="w">          </span><span class="nf">CALCULATE</span><span class="p">([</span># Registros], ALL(Dim_Tabla)),
+<span class="w">              </span><span class="m">1</span>
+<span class="w">              </span><span class="p">)</span>
+</code></pre></div></li>
+<li><strong>Formato:</strong> General</li>
+</ul>
+</li>
+<li><strong>Actualización</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el indicador de actualización en la fecha de análisis.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Actualización = CALCULATE([Nivel General Calidad],Dim_Componente_Calidad[Id_Componente] = 4,Fact_Indicadores_Historicos[Analisis Actual]=&quot;SI&quot;)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Actualización Historico</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de actualización.</li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Actualización Historico = CALCULATE([Nivel General Calidad Historico],Dim_Componente_Calidad[Id_Componente] = 4)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Calidad 0</strong>  <ul>
+<li><strong>Objetivo:</strong> Medida auxiliar para gráfico de red de nivel de los componentes de calidad. </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Calidad 0 = 0
+</code></pre></div></li>
+<li><strong>Formato:</strong> Entero</li>
+</ul>
+</li>
+<li><strong>Calidad 100</strong>  <ul>
+<li><strong>Objetivo:</strong> Medida auxiliar para gráfico de red de nivel de los componentes de calidad. </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Calidad 100 = 1
+</code></pre></div></li>
+<li><strong>Formato:</strong> Entero</li>
+</ul>
+</li>
+<li><strong>Calidad 20</strong>  <ul>
+<li><strong>Objetivo:</strong> Medida auxiliar para gráfico de red de nivel de los componentes de calidad. </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Calidad 20 = 0.2
+</code></pre></div></li>
+<li><strong>Formato:</strong> General</li>
+</ul>
+</li>
+<li><strong>Calidad 40</strong>  <ul>
+<li><strong>Objetivo:</strong> Medida auxiliar para gráfico de red de nivel de los componentes de calidad.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Calidad 40 = 0.4
+</code></pre></div></li>
+<li><strong>Formato:</strong> General</li>
+</ul>
+</li>
+<li><strong>Calidad 60</strong>  <ul>
+<li><strong>Objetivo:</strong> Medida auxiliar para gráfico de red de nivel de los componentes de calidad.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Calidad 60 = 0.6
+</code></pre></div></li>
+<li><strong>Formato:</strong> General</li>
+</ul>
+</li>
+<li><strong>Calidad 80</strong>  <ul>
+<li><strong>Objetivo:</strong> Medida auxiliar para gráfico de red de nivel de los componentes de calidad.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Calidad 80 = 0.8
+</code></pre></div></li>
+<li><strong>Formato:</strong> General</li>
+</ul>
+</li>
+<li><strong>Completitud</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el indicador de completitud en la fecha de análisis.</li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Completitud = 
+<span class="nf">IF</span><span class="p">(</span>
+<span class="w">      </span><span class="nf">HASONEVALUE</span><span class="p">(</span><span class="na">Fact_Metadatos_Campos[Campo]</span><span class="p">),</span>
+<span class="w">          </span><span class="nf">AVERAGE</span><span class="p">(</span><span class="na">Fact_Metadatos_Campos[Completitud_Campo]</span><span class="p">),</span>
+<span class="w">              </span><span class="nf">CALCULATE</span><span class="p">(</span>
+<span class="w">                        </span><span class="na">[Nivel General Calidad]</span><span class="p">,</span>
+<span class="w">                                </span><span class="na">Dim_Componente_Calidad[Id_Componente]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="w">                        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Completitud Campo</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el indicador de completitud en la fecha de análisis a nivel de campo. </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Completitud Campo = AVERAGE(Fact_Metadatos_Campos[Completitud_Campo])
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Completitud Historico</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de completitud.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Completitud Historico = CALCULATE([Nivel General Calidad Historico],Dim_Componente_Calidad[Id_Componente] = 2)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Compresibilidad</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de compresibilidad.</li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Compresibilidad = 
+<span class="nf">IF</span><span class="p">(</span>
+<span class="w">      </span><span class="nf">HASONEVALUE</span><span class="p">(</span><span class="na">Fact_Metadatos_Campos[Campo]</span><span class="p">),</span>
+<span class="w">          </span><span class="nf">AVERAGE</span><span class="p">(</span><span class="na">Fact_Metadatos_Campos[Compresibilidad Campo]</span><span class="p">),</span>
+<span class="w">              </span><span class="nf">CALCULATE</span><span class="p">(</span>
+<span class="w">                        </span><span class="na">[Nivel General Calidad]</span><span class="p">,</span>
+<span class="w">                                </span><span class="na">Dim_Componente_Calidad[Id_Componente]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span>
+<span class="w">                        </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Compresibilidad Historico</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de compresibilidad.</li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Compresibilidad Historico = CALCULATE([Nivel General Calidad Historico],Dim_Componente_Calidad[Id_Componente] = 8)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Conformidad</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de conformidad.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Conformidad = 
+<span class="nf">IF</span><span class="p">(</span>
+<span class="w">      </span><span class="nf">HASONEVALUE</span><span class="p">(</span><span class="na">Fact_Metadatos_Campos[Campo]</span><span class="p">),</span>
+<span class="w">          </span><span class="nf">AVERAGE</span><span class="p">(</span><span class="na">Fact_Metadatos_Campos[Conformidad_Campo]</span><span class="p">),</span>
+<span class="w">              </span><span class="nf">CALCULATE</span><span class="p">(</span>
+<span class="w">                        </span><span class="na">[Nivel General Calidad]</span><span class="p">,</span>
+<span class="w">                                </span><span class="na">Dim_Componente_Calidad[Id_Componente]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">6</span>
+<span class="w">                        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Conformidad Historico</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de conformidad.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Conformidad Historico = CALCULATE([Nivel General Calidad Historico],Dim_Componente_Calidad[Id_Componente] = 6)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Consistencia</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el indicador de consistencia en la fecha de análisis.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Consistencia = CALCULATE([Nivel General Calidad],Dim_Componente_Calidad[Id_Componente] = 3)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Consistencia Historico</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de consistencia.</li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Consistencia Historico = CALCULATE([Nivel General Calidad Historico],Dim_Componente_Calidad[Id_Componente] = 3)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Credibilidad</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el indicador de credibilidad en la fecha de análisis.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Credibilidad = CALCULATE([Nivel General Calidad],Dim_Componente_Calidad[Id_Componente] = 7)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Credibilidad Historico</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de credibilidad.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Credibilidad Historico = CALCULATE([Nivel General Calidad Historico],Dim_Componente_Calidad[Id_Componente] = 7)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Exactitud</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el indicador de exactitud en la fecha de análisis.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Exactitud = 
+<span class="nf">IF</span><span class="p">(</span>
+<span class="w">      </span><span class="nf">HASONEVALUE</span><span class="p">(</span><span class="na">Fact_Metadatos_Campos[Campo]</span><span class="p">),</span>
+<span class="w">          </span><span class="nf">AVERAGE</span><span class="p">(</span><span class="na">Fact_Metadatos_Campos[Exactitud_Campo]</span><span class="p">),</span>
+<span class="w">              </span><span class="nf">CALCULATE</span><span class="p">(</span>
+<span class="w">                        </span><span class="na">[Nivel General Calidad]</span><span class="p">,</span>
+<span class="w">                                </span><span class="na">Dim_Componente_Calidad[Id_Componente]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
+<span class="w">                        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Exactitud Campo</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el indicador de exactitud en la fecha de análisis a nivel de campo.</li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Exactitud Campo = AVERAGE(Fact_Metadatos_Campos[Exactitud_Campo])
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Exactitud Historico</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de exactitud.   </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Exactitud Historico = CALCULATE([Nivel General Calidad Historico],Dim_Componente_Calidad[Id_Componente] = 1)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Fecha Analisis</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular la fecha en la que se realiza el análisis.</li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Fecha Analisis = max(Fact_Indicadores_Historicos[Fecha_Medida])
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Nivel General Calidad</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el nivel general de calidad de datos en la fecha de análisis.   </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Nivel General Calidad = CALCULATE([Nivel General Calidad Historico],Fact_Indicadores_Historicos[Analisis Actual]=&quot;SI&quot;)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Nivel General Calidad Historico</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del nivel general de calidad de datos.</li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Nivel General Calidad Historico = CALCULATE(AVERAGE(Fact_Indicadores_Historicos[Valor_Indicador]))
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Trazabilidad</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el indicador de trazabilidad en la fecha de análisis.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Trazabilidad = CALCULATE([Nivel General Calidad],Dim_Componente_Calidad[Id_Componente] = 5)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>Trazabilidad Historico</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular el histórico del indicador de trazabilidad.  </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>Trazabilidad Historico = CALCULATE([Nivel General Calidad Historico],Dim_Componente_Calidad[Id_Componente] = 5)
+</code></pre></div></li>
+<li><strong>Formato:</strong> Porcentaje</li>
+</ul>
+</li>
+<li><strong>V1 (Columnas)</strong>  <ul>
+<li><strong>Objetivo:</strong> Calcular los registros de los campos con nombres repetidos. </li>
+<li><strong>Expresión DAX:</strong><br />
+    <div class="highlight"><pre><span></span><code>V1 (Columnas) = 
+<span class="nb">var</span><span class="w"> </span>repetidos = CALCULATE(sum(Fact_Metadatos_Campos[TotalRegistros]), Fact_Metadatos_Campos[Campo_Repetido] = &quot;SI&quot;)
+<span class="nb">return</span><span class="w"> </span><span class="m">1</span><span class="o">-</span><span class="w"> </span><span class="nf">divide</span><span class="p">(</span>repetidos, [# Registros Campos],0)
 </code></pre></div></li>
 <li><strong>Formato:</strong> Entero</li>
 </ul>
